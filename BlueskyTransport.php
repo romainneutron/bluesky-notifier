@@ -220,7 +220,7 @@ final class BlueskyTransport extends AbstractTransport
                 'features' => [
                     [
                         '$type' => 'app.bsky.richtext.facet#tag',
-                        'tag' => $match['match'],
+                        'tag' => substr($match['match'], 1),
                     ],
                 ],
             ];
