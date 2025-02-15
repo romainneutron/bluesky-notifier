@@ -208,6 +208,24 @@ final class BlueskyTransport extends AbstractTransport
             ];
         }
 
+        // partial/naive URL regex based on: https://github.com/bluesky-social/atproto/blob/main/packages/api/src/rich-text/util.ts
+        // https://github.com/bluesky-social/atproto/blob/main/packages/api/src/rich-text/detection.ts
+        $regex = '/(?:^|\s)(#[\p{L}\p{N}_]+)/u';
+        foreach ($this->getMatchAndPosition($text, $regex) as $match) {
+            $facets[] = [
+                'index' => [
+                    'byteStart' => $match['start'],
+                    'byteEnd' => $match['end'],
+                ],
+                'features' => [
+                    [
+                        '$type' => 'app.bsky.richtext.facet#tag',
+                        'tag' => $match['match'],
+                    ],
+                ],
+            ];
+        }
+
         return $facets;
     }
 
